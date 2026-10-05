@@ -1,6 +1,6 @@
 /**
  * Public self-serve signup: an email + password with NO registration token
- * (after the bootstrap admin exists) creates a CUSTOMER user and issues a
+ * (after the bootstrap admin exists) creates a VENDOR user and issues a
  * session token. A supplied token keeps the invite path (USER).
  */
 
@@ -30,8 +30,8 @@ function makeService(existingUsers: number) {
   return { service, create, tx };
 }
 
-describe('AuthService.signup — customer self-signup', () => {
-  it('creates a CUSTOMER when no registration token is supplied', async () => {
+describe('AuthService.signup — vendor open self-signup', () => {
+  it('creates a VENDOR when no registration token is supplied', async () => {
     const { service, create } = makeService(3);
 
     const { user, token } = await service.signup({
@@ -42,9 +42,9 @@ describe('AuthService.signup — customer self-signup', () => {
     expect(create).toHaveBeenCalledTimes(1);
     expect(create.mock.calls[0][0].data).toMatchObject({
       email: 'newuser@example.com',
-      role: 'CUSTOMER',
+      role: 'VENDOR',
     });
-    expect(user.role).toBe('CUSTOMER');
+    expect(user.role).toBe('VENDOR');
     expect(token).toBe('jwt-token');
   });
 
@@ -56,7 +56,7 @@ describe('AuthService.signup — customer self-signup', () => {
     expect(create.mock.calls[0][0].data).toMatchObject({ role: 'ADMIN' });
   });
 
-  it('rejects an invalid registration token instead of falling back to CUSTOMER', async () => {
+  it('rejects an invalid registration token instead of falling back to VENDOR', async () => {
     const { service, create } = makeService(3);
 
     await expect(
