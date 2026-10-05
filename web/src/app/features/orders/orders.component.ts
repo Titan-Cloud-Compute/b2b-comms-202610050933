@@ -53,31 +53,39 @@ function registerOrderMocks(client: MockApiClient): void {
   standalone: true,
   imports: [FormsModule],
   template: `
-    <div data-testid="orders-screen">
-      <h1>Orders</h1>
+    <div class="page" data-testid="orders-screen">
+      <h1 class="page-title">Orders</h1>
 
-      <section>
+      <section class="card">
         <h2>Place a purchase order</h2>
         <p>When you submit a purchase order, {{ createdMessage }}.</p>
         <form data-testid="order-create-form" (ngSubmit)="submitOrder()">
-          <label>Vendor ID
-            <input name="vendorId" data-testid="order-vendor-id" [(ngModel)]="vendorId" required />
-          </label>
+          <div class="form-grid">
+            <div class="field">
+              <label for="order-vendor-id">Vendor ID</label>
+              <input id="order-vendor-id" name="vendorId" data-testid="order-vendor-id" [(ngModel)]="vendorId" required />
+            </div>
+          </div>
           @for (item of items; track $index) {
-            <fieldset>
-              <label>Description
+            <fieldset class="item-row" style="border:none;margin:0;padding:0">
+              <div class="field">
+                <label>Description</label>
                 <input [name]="'description' + $index" [(ngModel)]="item.description" required />
-              </label>
-              <label>Quantity
+              </div>
+              <div class="field">
+                <label>Quantity</label>
                 <input type="number" min="1" [name]="'quantity' + $index" [(ngModel)]="item.quantity" required />
-              </label>
-              <label>Unit price
+              </div>
+              <div class="field">
+                <label>Unit price</label>
                 <input type="number" min="0" step="0.01" [name]="'unitPrice' + $index" [(ngModel)]="item.unitPrice" required />
-              </label>
+              </div>
             </fieldset>
           }
-          <button type="button" (click)="addItem()">Add item</button>
-          <button type="submit" data-testid="order-submit" [disabled]="busy">Submit order</button>
+          <div style="display:flex;gap:var(--space-2);margin-top:var(--space-4)">
+            <button type="button" class="btn btn-secondary" (click)="addItem()">Add item</button>
+            <button type="submit" class="btn btn-primary" data-testid="order-submit" [disabled]="busy">Submit order</button>
+          </div>
         </form>
         @if (createdOrder) {
           <p data-testid="order-created">Order {{ createdOrder.id }} created: {{ createdMessage }}.</p>
@@ -90,19 +98,40 @@ function registerOrderMocks(client: MockApiClient): void {
         @if (error) {
           <p role="alert" data-testid="order-error">{{ error }}</p>
         }
-        <ul data-testid="order-list">
-          @for (order of orders; track order.id) {
-            <li data-testid="order-row">
-              <span>{{ order.id }}</span> — <strong data-testid="order-status">{{ order.status }}</strong>
-              @if (order.status === 'pending') {
-                <input type="date" [name]="'eta' + order.id" [(ngModel)]="eta[order.id]" aria-label="Estimated delivery" />
-                <button type="button" data-testid="order-confirm" (click)="confirmOrder(order)" [disabled]="busy || !eta[order.id]">Confirm</button>
-              }
-            </li>
-          } @empty {
-            <li>No orders yet.</li>
-          }
-        </ul>
+        <div data-component="OrderQueue">
+          <div class="table-scroll">
+            <table class="data-table" data-testid="order-list">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Status</th>
+                  <th>Estimated delivery</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (order of orders; track order.id) {
+                  <tr data-testid="order-row">
+                    <td>{{ order.id }}</td>
+                    <td><span class="status-pill {{ order.status }}" data-testid="order-status">{{ order.status }}</span></td>
+                    <td>
+                      @if (order.status === 'pending') {
+                        <input type="date" [name]="'eta' + order.id" [(ngModel)]="eta[order.id]" aria-label="Estimated delivery" />
+                      }
+                    </td>
+                    <td>
+                      @if (order.status === 'pending') {
+                        <button type="button" class="btn btn-primary" data-testid="order-confirm" (click)="confirmOrder(order)" [disabled]="busy || !eta[order.id]">Confirm</button>
+                      }
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr><td colspan="4"><div class="empty-state">No orders yet.</div></td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
         @if (confirmedOrderId) {
           <p data-testid="order-confirmed">Order {{ confirmedOrderId }} confirmed: {{ confirmedMessage }}.</p>
         }
