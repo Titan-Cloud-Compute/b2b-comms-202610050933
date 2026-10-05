@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "e2e:auth-entry": "ng build && playwright test -c playwright.hermetic.config.ts e2e/journeys/visitor-signs-up/signup.spec.ts e2e/journeys/visitor-logs-in/login.spec.ts e2e/journeys/admin-reaches-customer-management/login.spec.ts e2e/journeys/vendor-reaches-vendor-profile/login.spec.ts e2e/journeys/customer-reaches-orders/login.spec.ts"
   },
   "dependencies": {
     "@angular/animations": "^19.2.0",
