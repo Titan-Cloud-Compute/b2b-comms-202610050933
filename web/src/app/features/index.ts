@@ -18,11 +18,11 @@ export const FEATURE_ROUTES: Routes = [];
 // <<codegen:feature-routes:start>>
 FEATURE_ROUTES.push(
   { path: 'vendor/profile', loadComponent: () => import('./vendor-profile/vendor-profile.component').then(m => m.VendorProfileComponent) },
-  { path: 'admin/customers', loadComponent: () => import('./customer-invite/customer-invite.component').then(m => m.CustomerInviteComponent) },
+  { path: 'admin/customers', loadComponent: () => import('./admin-customers/admin-customers.component').then(m => m.AdminCustomersComponent) },
   { path: 'channels', loadComponent: () => import('./channels/channels.component').then(m => m.ChannelsComponent) },
   { path: 'orders', loadComponent: () => import('./orders/orders.component').then(m => m.OrdersComponent) },
   { path: 'invoices', loadComponent: () => import('./invoices/invoices.component').then(m => m.InvoicesComponent) },
-  { path: 'settings/notifications', loadComponent: () => import('./notification-preferences/notification-preferences.component').then(m => m.NotificationPreferencesComponent) },
-  { path: 'admin/audit-log', loadComponent: () => import('./audit-log/audit-log.component').then(m => m.AdminAuditLogComponent) },
+  { path: 'settings/notifications', loadComponent: () => import('./settings-notifications/settings-notifications.component').then(m => m.SettingsNotificationsComponent) },
+  { path: 'admin/audit-log', loadComponent: () => import('./admin-audit-log/admin-audit-log.component').then(m => m.AdminAuditLogComponent) },
 );
 // <<codegen:feature-routes:end>>

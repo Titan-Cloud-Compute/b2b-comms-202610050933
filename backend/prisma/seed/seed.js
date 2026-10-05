@@ -72,22 +72,6 @@ async function main() {
   }
 
   console.log(`[seed] colossus_accounts upserted ${count}`);
-
-  // Journey demo accounts (auth entry card): idempotent, password "password".
-  const journeyAccounts = [
-    { email: 'buyer@corp.example.com', role: 'CUSTOMER', name: 'Corp Buyer' },
-    { email: 'admin@b2b-portal.example.com', role: 'ADMIN', name: 'Portal Admin' },
-    { email: 'vendor@acme.example.com', role: 'VENDOR', name: 'Acme Vendor' },
-  ];
-  const journeyHash = bcrypt.hashSync('password', 10);
-  for (const ja of journeyAccounts) {
-    await prisma.user.upsert({
-      where: { email: ja.email },
-      update: { role: ja.role, passwordHash: journeyHash },
-      create: { email: ja.email, name: ja.name, role: ja.role, passwordHash: journeyHash },
-    });
-  }
-  console.log(`[seed] journey users upserted ${journeyAccounts.length}`);
 }
 
 main()

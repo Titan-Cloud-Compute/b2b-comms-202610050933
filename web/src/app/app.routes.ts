@@ -25,13 +25,13 @@ export const routes: Routes = [
   },
   {
     path: 'signup',
-    loadComponent: () => import('./signup/signup.component').then(m => m.SignupComponent),
-    pathMatch: 'full',
-    data: { hideSupportFooter: true }
+    redirectTo: 'signup/1',
+    pathMatch: 'full'
   },
   {
     path: 'signup/:step',
-    redirectTo: 'signup'
+    loadComponent: () => import('./signup/signup.component').then(m => m.SignupComponent),
+    data: { hideSupportFooter: ['1'] }
   },
   {
     path: 'terms',

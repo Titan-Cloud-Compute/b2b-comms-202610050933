@@ -135,17 +135,7 @@
     <!-- Colossus feedback widget (host-agnostic; off-cluster aibusinessbg.com). deploymentId baked;
        public ingest token substituted at deploy. Minimal async-deferred snippet; logic in loader.js;
        self-gates via /ingest/v1/config (Widget Mode toggle); no-ops on the unsubstituted token placeholder. -->
-  <!-- Skipped in automated browsers (navigator.webdriver) so the extra Feedback button
-       does not make getByRole('button') ambiguous in the e2e journeys. -->
-  <script>
-  (function () {
-    if (navigator.webdriver === true) { return; }
-    window.__COLOSSUS_FEEDBACK__={d:"0f8def9f-78a1-4edb-bc33-14e5759ec661",token:"fbk_8174fe731bbc8ba8c573e5a75493ed9e5aba081d4a5ec623"};
-    var s = document.createElement('script');
-    s.src = "https://colossus.athenconsult.com/ingest/v1/loader.js?app=0f8def9f";
-    s.defer = true;
-    document.body.appendChild(s);
-  })();
-  </script>
+  <script>window.__COLOSSUS_FEEDBACK__={d:"0f8def9f-78a1-4edb-bc33-14e5759ec661",token:"fbk_8174fe731bbc8ba8c573e5a75493ed9e5aba081d4a5ec623"};</script>
+  <script src="https://colossus.athenconsult.com/ingest/v1/loader.js?app=0f8def9f" defer></script>
 </body>
 </html>

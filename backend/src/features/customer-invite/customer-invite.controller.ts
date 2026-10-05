@@ -1,32 +1,25 @@
-import { Body, Controller, Get, HttpCode, Post, UseGuards } from '@nestjs/common';
+import { Controller, NotImplementedException, UseGuards, Post, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UserRole } from '@prisma/client';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { Roles, RolesGuard } from '../../auth/roles.guard';
 import { CustomerInviteService } from './customer-invite.service';
-import {
-  GetApiAdminCustomersResponseDto,
-  PostApiAdminCustomersInviteRequestDto,
-  PostApiAdminCustomersInviteResponseDto,
-} from './customer-invite.dto';
 
 @ApiTags('customer-invite')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.ADMIN)
-@Controller('api/admin/customers')
+@Controller('api/customer-invite')
 export class CustomerInviteController {
-  constructor(private readonly customerInvite: CustomerInviteService) {}
+  constructor(private readonly customerinvite: CustomerInviteService) {}
 
-  @Post('invite')
-  @HttpCode(201)
-  async postApiAdminCustomersInvite(
-    @Body() body: PostApiAdminCustomersInviteRequestDto,
-  ): Promise<PostApiAdminCustomersInviteResponseDto> {
-    return this.customerInvite.invite(body?.email);
+  @Post('api/admin/customers/invite')
+  async postApiAdminCustomersInvite() {
+    throw new NotImplementedException();
   }
 
-  @Get()
-  async getApiAdminCustomers(): Promise<GetApiAdminCustomersResponseDto[]> {
-    return this.customerInvite.list();
+  @Get('api/admin/customers')
+  async getApiAdminCustomers() {
+    throw new NotImplementedException();
   }
+
 }
