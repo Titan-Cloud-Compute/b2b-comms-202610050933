@@ -8,11 +8,33 @@ export interface User {
   email: string;
   name: string;
   firmName?: string;
-  role: 'USER' | 'ADMIN' | 'SUPER_ADMIN';
+  role: 'USER' | 'ADMIN' | 'SUPER_ADMIN' | 'VENDOR' | 'CUSTOMER';
   firmId?: string;
 }
 
-const ROLES: readonly User['role'][] = ['USER', 'ADMIN', 'SUPER_ADMIN'];
+const ROLES: readonly User['role'][] = ['USER', 'ADMIN', 'SUPER_ADMIN', 'VENDOR', 'CUSTOMER'];
+
+/** Normalise a backend role string to a client role. */
+export function mapUserRole(backendRole: string): User['role'] {
+  return ROLES.includes(backendRole as User['role'])
+    ? (backendRole as User['role'])
+    : 'USER';
+}
+
+/** Where each role lands after signing in / signing up. */
+export function landingRouteFor(role: User['role']): string {
+  switch (role) {
+    case 'VENDOR':
+      return '/vendor/profile';
+    case 'CUSTOMER':
+      return '/orders';
+    case 'ADMIN':
+    case 'SUPER_ADMIN':
+      return '/admin/customers';
+    default:
+      return '/dashboard';
+  }
+}
 
 /**
  * Parse a persisted user, returning null for anything that is not a valid
