@@ -1,7 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ApiClient, MockApiClient } from '../../shared/api/api-client';
+import { ApiClient, ApiError, MockApiClient } from '../../shared/api/api-client';
 import { AuthService } from '../../shared/auth.service';
 
 /** AuditEntry — mirrors the shared data model (id, action, userId, createdAt). */
@@ -133,8 +133,11 @@ export class AdminAuditLogComponent implements OnInit {
     this.loading.set(true);
     this.error.set(null);
     try {
-      const list = await this.call<AuditEntry[]>(c => c.get<AuditEntry[]>(AUDIT_LOG_PATH));
-      this.entries.set(this.sortChronologically(Array.isArray(list) ? list : []));
+      const res = await this.call<AuditEntry[] | { rows?: AuditEntry[] }>(c =>
+        c.get<AuditEntry[] | { rows?: AuditEntry[] }>(AUDIT_LOG_PATH),
+      );
+      const list = Array.isArray(res) ? res : Array.isArray(res?.rows) ? res.rows : [];
+      this.entries.set(this.sortChronologically(list));
       this.listStatus.set(LIST_OK_TEXT);
     } catch (err: unknown) {
       this.error.set(err instanceof Error ? err.message : 'Failed to load audit log');
@@ -175,12 +178,17 @@ export class AdminAuditLogComponent implements OnInit {
     }
   }
 
-  /** Use the app ApiClient; fall back to the in-memory mock if the endpoint isn't available. */
+  /**
+   * Use the app ApiClient; fall back to the in-memory mock only when the
+   * endpoint is missing/unreachable (network failure, 404, 501, 5xx) — real
+   * client errors such as 400/401/403 are surfaced to the user.
+   */
   private async call<T>(fn: (c: ApiClient) => Promise<T>): Promise<T> {
     if (this.fallback) return fn(this.fallback);
     try {
       return await fn(this.api);
-    } catch {
+    } catch (err: unknown) {
+      if (err instanceof ApiError && err.status > 0 && err.status !== 404 && err.status < 500) throw err;
       this.fallback = buildAuditLogMock();
       return fn(this.fallback);
     }
