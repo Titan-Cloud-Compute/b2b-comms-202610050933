@@ -54,8 +54,8 @@ function buildAuditLogMock(): MockApiClient {
   standalone: true,
   imports: [FormsModule, DatePipe],
   template: `
-    <div data-testid="admin-audit-log-screen">
-      <h1>Audit Log</h1>
+    <div class="page" data-testid="admin-audit-log-screen">
+      <h1 class="page-title">Audit Log</h1>
 
       @if (loading()) {
         <p data-testid="audit-log-loading">Loading audit entries…</p>
@@ -70,38 +70,46 @@ function buildAuditLogMock(): MockApiClient {
         <p data-testid="audit-log-record-status">{{ recordStatus() }}</p>
       }
 
-      <form data-testid="audit-log-record-form" (ngSubmit)="record()">
-        <h2>Record action</h2>
-        <label>
-          Action
-          <input name="action" data-testid="audit-log-action-input" [(ngModel)]="action" required />
-        </label>
-        <label>
-          User ID
-          <input name="userId" data-testid="audit-log-userid-input" [(ngModel)]="userId" required />
-        </label>
-        <button type="submit" data-testid="audit-log-record-submit" [disabled]="saving()">Record</button>
-      </form>
+      <section class="card">
+        <form data-testid="audit-log-record-form" (ngSubmit)="record()">
+          <h2>Record action</h2>
+          <div class="form-grid">
+            <div class="field">
+              <label for="audit-action">Action</label>
+              <input id="audit-action" name="action" data-testid="audit-log-action-input" [(ngModel)]="action" required />
+            </div>
+            <div class="field">
+              <label for="audit-userid">User ID</label>
+              <input id="audit-userid" name="userId" data-testid="audit-log-userid-input" [(ngModel)]="userId" required />
+            </div>
+          </div>
+          <div style="margin-top:var(--space-4)">
+            <button type="submit" class="btn btn-primary" data-testid="audit-log-record-submit" [disabled]="saving()">Record</button>
+          </div>
+        </form>
+      </section>
 
-      @if (entries().length) {
-        <table data-testid="audit-log-table">
+      <div class="table-scroll">
+        <table class="data-table" data-testid="audit-log-table">
           <thead>
             <tr><th>ID</th><th>Action</th><th>User ID</th><th>Created at</th></tr>
           </thead>
           <tbody>
-            @for (e of entries(); track e.id) {
-              <tr data-testid="audit-log-row">
-                <td>{{ e.id }}</td>
-                <td>{{ e.action }}</td>
-                <td>{{ e.userId }}</td>
-                <td>{{ e.createdAt | date: 'medium' }}</td>
-              </tr>
+            @if (entries().length) {
+              @for (e of entries(); track e.id) {
+                <tr data-testid="audit-log-row">
+                  <td>{{ e.id }}</td>
+                  <td>{{ e.action }}</td>
+                  <td>{{ e.userId }}</td>
+                  <td>{{ e.createdAt | date: 'medium' }}</td>
+                </tr>
+              }
+            } @else {
+              <tr><td colspan="4"><div class="empty-state" data-testid="audit-log-empty">No audit entries yet.</div></td></tr>
             }
           </tbody>
         </table>
-      } @else {
-        <p data-testid="audit-log-empty">No audit entries yet.</p>
-      }
+      </div>
     </div>
   `,
 })

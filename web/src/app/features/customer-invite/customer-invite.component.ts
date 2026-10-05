@@ -41,24 +41,30 @@ function registerMocks(client: MockApiClient): void {
   standalone: true,
   imports: [FormsModule],
   template: `
-    <div data-testid="admin-customers-screen">
-      <h1>Customer Management</h1>
+    <div class="page" data-testid="admin-customers-screen">
+      <h1 class="page-title">Customer Management</h1>
 
-      <section>
+      <section class="card">
         <h2>Invite a customer</h2>
         <p>When you invite a new email, {{ inviteRule }}.</p>
         <p>If a customer with that email already exists, {{ duplicateRule }}.</p>
         <form data-testid="customer-invite-form" (ngSubmit)="invite()">
-          <label for="customer-invite-email">Customer email</label>
-          <input
-            id="customer-invite-email"
-            type="email"
-            name="email"
-            required
-            [(ngModel)]="email"
-            [disabled]="submitting()"
-          />
-          <button type="submit" [disabled]="submitting() || !email.trim()">Send invitation</button>
+          <div class="form-grid">
+            <div class="field">
+              <label for="customer-invite-email">Customer email</label>
+              <input
+                id="customer-invite-email"
+                type="email"
+                name="email"
+                required
+                [(ngModel)]="email"
+                [disabled]="submitting()"
+              />
+            </div>
+          </div>
+          <div style="margin-top:var(--space-4)">
+            <button type="submit" class="btn btn-primary" [disabled]="submitting() || !email.trim()">Send invitation</button>
+          </div>
         </form>
         @if (successMessage()) {
           <p role="status" data-testid="customer-invite-success">{{ successMessage() }}</p>
@@ -68,15 +74,22 @@ function registerMocks(client: MockApiClient): void {
         }
       </section>
 
-      <section>
+      <section class="card">
         <h2>Customers</h2>
-        <ul data-testid="customer-list">
-          @for (c of customers(); track c.id) {
-            <li>{{ c.email }}</li>
-          } @empty {
-            <li>No customers invited yet.</li>
-          }
-        </ul>
+        <div class="table-scroll">
+          <table class="data-table" data-testid="customer-list">
+            <thead>
+              <tr><th>Email</th></tr>
+            </thead>
+            <tbody>
+              @for (c of customers(); track c.id) {
+                <tr><td>{{ c.email }}</td></tr>
+              } @empty {
+                <tr><td><div class="empty-state">No customers invited yet.</div></td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </section>
     </div>
   `,
