@@ -28,16 +28,20 @@ function registerChannelMocks(client: MockApiClient): void {
   standalone: true,
   imports: [ReactiveFormsModule],
   template: `
-    <div data-testid="channels-screen">
-      <h1>Channels</h1>
+    <div class="page" data-testid="channels-screen">
+      <h1 class="page-title">Channels</h1>
 
-      <section>
+      <section class="card">
         <h2>Create a shared channel</h2>
         <p>Vendors create a shared channel: {{ channelOutcome }}.</p>
-        <form data-testid="channel-create-form" [formGroup]="createForm" (ngSubmit)="createChannel()">
-          <label for="channelName">Channel name</label>
-          <input id="channelName" formControlName="name" data-testid="channel-name" />
-          <button type="submit" [disabled]="createForm.invalid || creating()">Create channel</button>
+        <form data-testid="channel-create-form" [formGroup]="createForm" (ngSubmit)="createChannel()" class="form-grid">
+          <div class="field">
+            <label for="channelName">Channel name</label>
+            <input id="channelName" formControlName="name" data-testid="channel-name" />
+          </div>
+          <div>
+            <button type="submit" class="btn btn-primary" [disabled]="createForm.invalid || creating()">Create channel</button>
+          </div>
         </form>
         @if (createError()) { <p role="alert">{{ createError() }}</p> }
         @if (createdChannel(); as c) {
@@ -45,40 +49,46 @@ function registerChannelMocks(client: MockApiClient): void {
         }
       </section>
 
-      <section>
-        <h2>Your channels</h2>
-        @if (listError()) { <p role="alert">{{ listError() }}</p> }
-        <ul data-testid="channel-list">
-          @for (c of channels(); track c.id) {
-            <li>
-              <button type="button" data-testid="channel-item" (click)="selectChannel(c)"
-                      [attr.aria-pressed]="selected()?.id === c.id">{{ c.name }}</button>
-            </li>
-          } @empty {
-            <li>No channels yet.</li>
-          }
-        </ul>
-      </section>
-
-      <section>
-        <h2>Messages</h2>
-        <p>Post a message in a channel: {{ messageOutcome }}.</p>
-        @if (selected(); as s) {
-          <form data-testid="message-form" [formGroup]="messageForm" (ngSubmit)="postMessage()">
-            <label for="messageBody">Message to {{ s.name }}</label>
-            <textarea id="messageBody" formControlName="body" data-testid="message-body"></textarea>
-            <button type="submit" [disabled]="messageForm.invalid || posting()">Send</button>
-          </form>
-          @if (messageError()) { <p role="alert">{{ messageError() }}</p> }
-          <ul data-testid="message-list">
-            @for (m of messages(); track m.id) {
-              <li>{{ m.body }}</li>
+      <div class="channel-split">
+        <section class="card">
+          <h2>Your channels</h2>
+          @if (listError()) { <p role="alert">{{ listError() }}</p> }
+          <ul data-testid="channel-list" data-component="ChannelList">
+            @for (c of channels(); track c.id) {
+              <li class="list-row">
+                <button type="button" data-testid="channel-item" (click)="selectChannel(c)"
+                        [attr.aria-pressed]="selected()?.id === c.id">{{ c.name }}</button>
+              </li>
+            } @empty {
+              <li class="empty-state">No channels yet.</li>
             }
           </ul>
-        } @else {
-          <p>Select a channel to post a message.</p>
-        }
-      </section>
+        </section>
+
+        <section class="card">
+          <h2>Messages</h2>
+          <p>Post a message in a channel: {{ messageOutcome }}.</p>
+          @if (selected(); as s) {
+            <form data-testid="message-form" [formGroup]="messageForm" (ngSubmit)="postMessage()" class="form-grid">
+              <div class="field">
+                <label for="messageBody">Message to {{ s.name }}</label>
+                <textarea id="messageBody" formControlName="body" data-testid="message-body"></textarea>
+              </div>
+              <div>
+                <button type="submit" class="btn btn-primary" [disabled]="messageForm.invalid || posting()">Send</button>
+              </div>
+            </form>
+            @if (messageError()) { <p role="alert">{{ messageError() }}</p> }
+            <ul data-testid="message-list">
+              @for (m of messages(); track m.id) {
+                <li>{{ m.body }}</li>
+              }
+            </ul>
+          } @else {
+            <p>Select a channel to post a message.</p>
+          }
+        </section>
+      </div>
     </div>
   `,
 })

@@ -5,8 +5,8 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   template: `
-    <div data-testid="settings-notifications-screen">
-      <h1>Notification Settings</h1>
+    <div class="page" data-testid="settings-notifications-screen">
+      <h1 class="page-title">Notification Settings</h1>
     </div>
   `,
 })
