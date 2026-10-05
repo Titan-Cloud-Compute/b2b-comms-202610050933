@@ -156,6 +156,7 @@
   --shadow-popup: 0 8px 24px rgba(0, 0, 0, 0.12);
   --shadow-modal: 0 10px 40px rgba(0, 0, 0, 0.2);
   --shadow-drawer: -4px 0 24px rgba(0, 0, 0, 0.2);
+  --color-modal-overlay: rgba(14, 23, 38, 0.6);
   --shadow-nav: 0 1px 3px rgba(42, 15, 49, 0.08);
   --shadow-header: 0 -1px 3px rgba(42, 15, 49, 0.08);
   --shadow-sidebar: 1px 0 3px rgba(42, 15, 49, 0.05);

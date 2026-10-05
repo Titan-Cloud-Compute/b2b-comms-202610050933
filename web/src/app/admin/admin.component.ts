@@ -17,10 +17,10 @@ type AdminTab = 'overview' | 'users' | 'app-settings';
     AdminUsersComponent,
   ],
   template: `
-    <div class="admin-page" data-placeholder>
+    <div class="page admin-page" data-placeholder>
       <header class="page-header">
         <div>
-          <h1>{{ getTabTitle() }}</h1>
+          <h1 class="page-title">{{ getTabTitle() }}</h1>
           @if (showUsageTimestamp()) {
             <p class="last-updated">Last updated: {{ formatLastUpdated() }}</p>
           }
