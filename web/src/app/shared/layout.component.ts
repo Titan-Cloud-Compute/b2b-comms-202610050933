@@ -68,6 +68,10 @@ import { NavItem, FIRM_NAV_ITEMS, ADMIN_NAV_ITEMS, SHARED_NAV_ITEMS, ADMIN_TAB_M
 
       <!-- Main Content -->
       <main class="main-content">
+        <!-- Desktop top bar (the mobile header above covers small screens). -->
+        <header class="top-bar">
+          <span class="top-bar-title">{{ headerTitle() }}</span>
+        </header>
         <!-- The routed page lives in a wrapper that carries this component's
              style-encapsulation attribute, so the shell can actually give it
              the leftover vertical space (a rule targeting the routed host
@@ -212,6 +216,24 @@ import { NavItem, FIRM_NAV_ITEMS, ADMIN_NAV_ITEMS, SHARED_NAV_ITEMS, ADMIN_TAB_M
 
     .main-content > * { min-height: 0; }
 
+    .top-bar {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      min-height: 56px;
+      padding: var(--space-3) var(--space-6);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border-light);
+      box-shadow: var(--shadow-nav);
+    }
+
+    .top-bar-title {
+      font-family: var(--font-heading);
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+
     /* The routed page absorbs the remaining space so short pages still paint
        their background down to the footer (grow, never shrink — tall pages keep
        their intrinsic height and .main-content scrolls instead of clipping). */
@@ -322,6 +344,7 @@ import { NavItem, FIRM_NAV_ITEMS, ADMIN_NAV_ITEMS, SHARED_NAV_ITEMS, ADMIN_TAB_M
     @media (max-width: 768px) {
       .mobile-header { display: flex; }
       .mobile-overlay { display: block; }
+      .top-bar { display: none; }
 
       .main-content {
         margin-left: 0;

@@ -59,3 +59,30 @@ FIRM_NAV_ITEMS.push(
   { path: '/admin/audit-log', label: 'Audit Log', icon: '' },
 );
 // <<codegen:nav-items:end>>
+
+/** Sidebar group for each feature page (Slack/Linear-style grouped navigation). */
+export type NavGroupName = 'Vendor' | 'Customer' | 'Admin';
+
+export const NAV_GROUP_BY_PATH: Record<string, NavGroupName> = {
+  '/vendor/profile': 'Vendor',
+  '/channels': 'Vendor',
+  '/invoices': 'Vendor',
+  '/settings/notifications': 'Vendor',
+  '/orders': 'Customer',
+  '/admin/customers': 'Admin',
+  '/admin/audit-log': 'Admin',
+};
+
+export interface NavGroup {
+  label: NavGroupName;
+  items: NavItem[];
+}
+
+/** Grouped feature entries, built from FIRM_NAV_ITEMS so labels stay in one place. */
+export const NAV_GROUPS: NavGroup[] = (['Vendor', 'Customer', 'Admin'] as NavGroupName[]).map(label => ({
+  label,
+  items: FIRM_NAV_ITEMS.filter(item => NAV_GROUP_BY_PATH[item.path] === label),
+}));
+
+/** Ungrouped "Main" entries (e.g. Dashboard). */
+export const MAIN_NAV_ITEMS: NavItem[] = FIRM_NAV_ITEMS.filter(item => !NAV_GROUP_BY_PATH[item.path]);

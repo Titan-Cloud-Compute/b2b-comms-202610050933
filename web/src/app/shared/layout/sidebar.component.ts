@@ -4,7 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { SafeHtmlPipe } from '../safe-html.pipe';
 import { AuthApi } from '../api/auth-api.service';
-import { FIRM_NAV_ITEMS, ADMIN_NAV_ITEMS, SHARED_NAV_ITEMS, ADMIN_TAB_MAP } from './nav-items';
+import { FIRM_NAV_ITEMS, ADMIN_NAV_ITEMS, SHARED_NAV_ITEMS, ADMIN_TAB_MAP, NAV_GROUPS, MAIN_NAV_ITEMS } from './nav-items';
 import { SIDEBAR_TEMPLATE } from './sidebar.template';
 
 @Component({
@@ -84,8 +84,8 @@ import { SIDEBAR_TEMPLATE } from './sidebar.template';
 
     .nav-group-label {
       font-size: var(--font-size-xs);
-      font-weight: 700;
-      color: var(--color-text-secondary);
+      font-weight: 600;
+      color: var(--color-text-muted);
       letter-spacing: 0.08em;
       padding: 0.875rem 1rem 0.375rem;
       text-transform: uppercase;
@@ -382,6 +382,8 @@ export class SidebarComponent {
   openSettings = output<void>();
 
   readonly firmNavItems = FIRM_NAV_ITEMS;
+  readonly mainNavItems = MAIN_NAV_ITEMS;
+  readonly navGroups = NAV_GROUPS;
   readonly adminNavItems = ADMIN_NAV_ITEMS;
   // Rendered for every role (see SHARED_NAV_ITEMS) — outside the role branches.
   readonly sharedNavItems = SHARED_NAV_ITEMS;
