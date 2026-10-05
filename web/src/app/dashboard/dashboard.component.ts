@@ -6,9 +6,9 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [FormsModule],
   template: `
-    <div class="dashboard-page" data-placeholder>
+    <div class="page dashboard-page" data-placeholder>
       <header class="page-header">
-        <h1>Dashboard</h1>
+        <h1 class="page-title">Dashboard</h1>
         <p class="subtitle">Welcome to the platform.</p>
       </header>
       <div class="placeholder-card">

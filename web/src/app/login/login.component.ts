@@ -72,7 +72,7 @@ export function landingRouteFor(role: string): string {
              single action on this screen. -->
       <div class="form-panel">
         <div class="form-container">
-          <h2 class="form-title">{{ 'Sign In' }}</h2>
+          <h1 class="form-title">{{ 'Sign In' }}</h1>
           <p class="form-subtitle">{{ 'Access your company profile' }}</p>
 
           <form (ngSubmit)="onLogin()" class="login-form">
