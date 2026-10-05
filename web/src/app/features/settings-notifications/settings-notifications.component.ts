@@ -7,7 +7,6 @@ import { Component } from '@angular/core';
   template: `
     <div data-testid="settings-notifications-screen">
       <h1>Notification Settings</h1>
-      <p>notification preference controls</p>
     </div>
   `,
 })
