@@ -132,7 +132,23 @@ export class SignupComponent implements OnDestroy {
       }, SUCCESS_REDIRECT_MS);
     } catch (err) {
       if (err instanceof ConflictError) {
-        this.error.set('An account with this email already exists');
+        // Email already registered: if the same credentials are valid, sign in
+        // and continue to the same confirmation + /orders landing.
+        try {
+          const existing = await this.authApi.login({ email, password: this.password });
+          this.auth.setUser({
+            id: existing.id,
+            email: existing.email,
+            name: existing.email.split('@')[0],
+            role: existing.role === 'ADMIN' || existing.role === 'SUPER_ADMIN' ? existing.role : 'USER',
+          });
+          this.created.set(true);
+          this.redirectTimer = setTimeout(() => {
+            void this.router.navigate(['/orders']);
+          }, SUCCESS_REDIRECT_MS);
+        } catch {
+          this.error.set('An account with this email already exists');
+        }
       } else if (err instanceof BadRequestError) {
         this.error.set('Invalid signup data');
       } else {
