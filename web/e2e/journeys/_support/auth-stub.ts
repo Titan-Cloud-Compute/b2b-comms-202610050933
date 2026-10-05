@@ -1,7 +1,7 @@
 /**
  * Hermetic auth stub for the journey specs: every /api/** call is answered
  * here so nothing reaches the network. POST /api/auth/login resolves the role
- * from the seeded demo email; POST /api/auth/signup creates a CUSTOMER.
+ * from the seeded demo email; POST /api/auth/signup creates a VENDOR.
  */
 import type { Page } from '@playwright/test';
 
@@ -48,7 +48,7 @@ export async function stubAuthApi(page: Page): Promise<void> {
     if (method === 'POST' && apiPath === 'auth/signup') {
       const email = String(body.email ?? '').toLowerCase();
       if (!email || !body.password) return json({ message: 'Bad Request' }, 400);
-      user = { id: 'new-customer', email, role: 'CUSTOMER' };
+      user = { id: 'new-vendor', email, role: 'VENDOR' };
       return json(user, 201);
     }
     if (method === 'GET' && (apiPath === 'users/me' || apiPath === 'auth/me')) {
