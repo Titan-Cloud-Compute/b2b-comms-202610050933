@@ -27,18 +27,24 @@ function registerVendorMocks(client: MockApiClient): void {
   standalone: true,
   imports: [ReactiveFormsModule],
   template: `
-    <div data-testid="vendor-profile-screen">
-      <h1>Vendor Profile</h1>
+    <div class="page" data-testid="vendor-profile-screen">
+      <h1 class="page-title">Vendor Profile</h1>
 
-      <section>
+      <section class="card">
         <h2>Company profile</h2>
         <p>Submit your company profile: {{ profileOutcome }}.</p>
-        <form data-testid="vendor-profile-form" [formGroup]="profileForm" (ngSubmit)="submitProfile()">
-          <label for="companyName">Company name</label>
-          <input id="companyName" formControlName="companyName" data-testid="vendor-company-name" />
-          <label for="contactEmail">Contact email</label>
-          <input id="contactEmail" type="email" formControlName="contactEmail" data-testid="vendor-contact-email" />
-          <button type="submit" [disabled]="profileForm.invalid || savingProfile()">Save profile</button>
+        <form data-testid="vendor-profile-form" [formGroup]="profileForm" (ngSubmit)="submitProfile()" class="form-grid">
+          <div class="field">
+            <label for="companyName">Company name</label>
+            <input id="companyName" formControlName="companyName" data-testid="vendor-company-name" />
+          </div>
+          <div class="field">
+            <label for="contactEmail">Contact email</label>
+            <input id="contactEmail" type="email" formControlName="contactEmail" data-testid="vendor-contact-email" />
+          </div>
+          <div>
+            <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid || savingProfile()">Save profile</button>
+          </div>
         </form>
         @if (profileError()) { <p role="alert">{{ profileError() }}</p> }
         @if (profile(); as p) {
@@ -53,13 +59,17 @@ function registerVendorMocks(client: MockApiClient): void {
         }
       </section>
 
-      <section>
+      <section class="card">
         <h2>Compliance documents</h2>
         <p>Upload a compliance document: {{ documentOutcome }}.</p>
-        <form data-testid="vendor-document-form" [formGroup]="documentForm" (ngSubmit)="uploadDocument()">
-          <label for="filename">Document filename</label>
-          <input id="filename" formControlName="filename" data-testid="vendor-document-filename" />
-          <button type="submit" [disabled]="documentForm.invalid || uploading()">Upload document</button>
+        <form data-testid="vendor-document-form" [formGroup]="documentForm" (ngSubmit)="uploadDocument()" class="form-grid">
+          <div class="field">
+            <label for="filename">Document filename</label>
+            <input id="filename" formControlName="filename" data-testid="vendor-document-filename" />
+          </div>
+          <div>
+            <button type="submit" class="btn btn-primary" [disabled]="documentForm.invalid || uploading()">Upload document</button>
+          </div>
         </form>
         @if (documentError()) { <p role="alert">{{ documentError() }}</p> }
 

@@ -47,45 +47,73 @@ function registerInvoiceMocks(api: ApiClient): void {
   standalone: true,
   imports: [],
   template: `
-    <div data-testid="invoices-screen">
-      <h1>Invoices</h1>
+    <div class="page" data-testid="invoices-screen">
+      <h1 class="page-title">Invoices</h1>
 
-      <section data-testid="invoice-generate-section">
-        <h2>Generate invoice</h2>
-        <p>Generate an invoice for a confirmed order: the invoice is created and returns 201 with the invoice id available for download.</p>
-        <form data-testid="invoice-generate-form" (submit)="$event.preventDefault(); generate()">
-          <label>
-            Order ID
-            <input data-testid="invoice-order-id" name="orderId" [value]="orderId"
-                   (input)="orderId = $any($event.target).value" required />
-          </label>
-          <label>
-            Amount
-            <input data-testid="invoice-amount" name="amount" type="number" step="0.01" [value]="amount"
-                   (input)="amount = $any($event.target).value" required />
-          </label>
-          <button type="submit" data-testid="invoice-generate-submit" [disabled]="busy">Generate invoice</button>
-        </form>
-        @if (created) {
-          <p data-testid="invoice-created">Invoice created: <span data-testid="invoice-id">{{ created.id }}</span></p>
-        }
-      </section>
+      <div data-component="InvoiceViewer">
+        <section data-testid="invoice-generate-section" class="card">
+          <h2>Generate invoice</h2>
+          <p>Generate an invoice for a confirmed order: the invoice is created and returns 201 with the invoice id available for download.</p>
+          <form data-testid="invoice-generate-form" class="form-grid" (submit)="$event.preventDefault(); generate()">
+            <div class="field">
+              <label>Order ID
+                <input data-testid="invoice-order-id" name="orderId" [value]="orderId"
+                       (input)="orderId = $any($event.target).value" required />
+              </label>
+            </div>
+            <div class="field">
+              <label>Amount
+                <input data-testid="invoice-amount" name="amount" type="number" step="0.01" [value]="amount"
+                       (input)="amount = $any($event.target).value" required />
+              </label>
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary" data-testid="invoice-generate-submit" [disabled]="busy">Generate invoice</button>
+            </div>
+          </form>
+          @if (created) {
+            <div data-testid="invoice-created" class="table-scroll">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Invoice ID</th>
+                    <th>Order ID</th>
+                    <th class="num">Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span data-testid="invoice-id">{{ created.id }}</span></td>
+                    <td>{{ created.orderId }}</td>
+                    <td class="num">{{ created.amount }}</td>
+                    <td><span class="status-pill generated">generated</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          }
+        </section>
 
-      <section data-testid="invoice-download-section">
-        <h2>Get download link</h2>
-        <p>Request the invoice download link: the response returns 200 with a downloadUrl pointing to the stored invoice.</p>
-        <form data-testid="invoice-download-form" (submit)="$event.preventDefault(); download()">
-          <label>
-            Invoice ID
-            <input data-testid="invoice-download-id" name="invoiceId" [value]="invoiceId"
-                   (input)="invoiceId = $any($event.target).value" required />
-          </label>
-          <button type="submit" data-testid="invoice-download-submit" [disabled]="busy">Get download link</button>
-        </form>
-        @if (downloadUrl) {
-          <p data-testid="invoice-download-url"><a [href]="downloadUrl" target="_blank" rel="noopener">{{ downloadUrl }}</a></p>
-        }
-      </section>
+        <section data-testid="invoice-download-section" class="card">
+          <h2>Get download link</h2>
+          <p>Request the invoice download link: the response returns 200 with a downloadUrl pointing to the stored invoice.</p>
+          <form data-testid="invoice-download-form" class="form-grid" (submit)="$event.preventDefault(); download()">
+            <div class="field">
+              <label>Invoice ID
+                <input data-testid="invoice-download-id" name="invoiceId" [value]="invoiceId"
+                       (input)="invoiceId = $any($event.target).value" required />
+              </label>
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary" data-testid="invoice-download-submit" [disabled]="busy">Get download link</button>
+            </div>
+          </form>
+          @if (downloadUrl) {
+            <p data-testid="invoice-download-url"><a [href]="downloadUrl" target="_blank" rel="noopener">{{ downloadUrl }}</a></p>
+          }
+        </section>
+      </div>
 
       @if (error) {
         <p role="alert" data-testid="invoice-error">{{ error }}</p>

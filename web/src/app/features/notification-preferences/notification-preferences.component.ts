@@ -21,38 +21,41 @@ export const DISABLED_ALL_MESSAGE =
   standalone: true,
   imports: [FormsModule],
   template: `
-    <div data-testid="settings-notifications-screen">
-      <h1>Notification Settings</h1>
+    <div class="page" data-testid="settings-notifications-screen">
+      <h1 class="page-title">Notification Settings</h1>
 
-      <form (ngSubmit)="save()">
-        <label>
-          <input
-            type="checkbox"
-            data-testid="order-alerts-toggle"
-            name="orderAlerts"
-            [(ngModel)]="orderAlerts"
-          />
-          Order alerts
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            data-testid="message-alerts-toggle"
-            name="messageAlerts"
-            [(ngModel)]="messageAlerts"
-          />
-          Message alerts
-        </label>
-        <button type="submit" data-testid="save-notification-preferences" [disabled]="saving">
-          Save
-        </button>
-      </form>
+      <section class="card">
+        <form (ngSubmit)="save()" class="stack">
+          <label class="check-row">
+            <input
+              type="checkbox"
+              data-testid="order-alerts-toggle"
+              name="orderAlerts"
+              [(ngModel)]="orderAlerts"
+            />
+            Order alerts
+          </label>
+          <label class="check-row">
+            <input
+              type="checkbox"
+              data-testid="message-alerts-toggle"
+              name="messageAlerts"
+              [(ngModel)]="messageAlerts"
+            />
+            Message alerts
+          </label>
+          <div>
+            <button type="submit" class="btn btn-primary" data-testid="save-notification-preferences" [disabled]="saving">
+              Save
+            </button>
+          </div>
+        </form>
+        @if (error) {
+          <p role="alert" data-testid="notification-preferences-error">{{ error }}</p>
+        }
+      </section>
 
-      @if (error) {
-        <p role="alert" data-testid="notification-preferences-error">{{ error }}</p>
-      }
-
-      <section data-testid="notification-preferences-outcomes">
+      <section class="card" data-testid="notification-preferences-outcomes">
         <p data-testid="configure-outcome" [class.active]="lastOutcome === 'configured'">
           {{ configuredMessage }}
         </p>
@@ -68,6 +71,18 @@ export const DISABLED_ALL_MESSAGE =
       }
     </div>
   `,
+  styles: [`
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      min-height: 2.75rem;
+      cursor: pointer;
+      color: var(--color-text-primary);
+      font-weight: 500;
+    }
+  `],
 })
 export class NotificationPreferencesComponent implements OnInit {
   private readonly api = inject(ApiClient);
