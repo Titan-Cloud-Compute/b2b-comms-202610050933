@@ -152,6 +152,7 @@
 /* ---- Shadows (moved from styles.css so components hold no raw literals) ---- */
 :root {
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --color-overlay: rgba(var(--color-primary-rgb), 0.5);
   --shadow-popup: 0 8px 24px rgba(0, 0, 0, 0.12);
   --shadow-modal: 0 10px 40px rgba(0, 0, 0, 0.2);
   --shadow-drawer: -4px 0 24px rgba(0, 0, 0, 0.2);

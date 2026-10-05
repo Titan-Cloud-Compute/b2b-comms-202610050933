@@ -40,20 +40,6 @@ import { NavItem, FIRM_NAV_ITEMS, ADMIN_NAV_ITEMS, SHARED_NAV_ITEMS, ADMIN_TAB_M
       </div>
     }
     <div class="layout">
-      <!-- Mobile Header -->
-      <header class="mobile-header">
-        <button class="menu-btn" (click)="toggleMobileMenu()" aria-label="Toggle menu">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            @if (mobileMenuOpen()) {
-              <path d="M6 18L18 6M6 6l12 12"/>
-            } @else {
-              <path d="M3 12h18M3 6h18M3 18h18"/>
-            }
-          </svg>
-        </button>
-        <span class="header-title">{{ headerTitle() }}</span>
-      </header>
-
       <!-- Sidebar -->
       <app-sidebar
         [mobileOpen]="mobileMenuOpen()"
@@ -68,8 +54,17 @@ import { NavItem, FIRM_NAV_ITEMS, ADMIN_NAV_ITEMS, SHARED_NAV_ITEMS, ADMIN_TAB_M
 
       <!-- Main Content -->
       <main class="main-content">
-        <!-- Desktop top bar (the mobile header above covers small screens). -->
+        <!-- Shared top bar: full on desktop, slim with a hamburger toggle on mobile. -->
         <header class="top-bar">
+          <button class="menu-btn" (click)="toggleMobileMenu()" aria-label="Toggle menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              @if (mobileMenuOpen()) {
+                <path d="M6 18L18 6M6 6l12 12"/>
+              } @else {
+                <path d="M3 12h18M3 6h18M3 18h18"/>
+              }
+            </svg>
+          </button>
           <span class="top-bar-title">{{ headerTitle() }}</span>
         </header>
         <!-- The routed page lives in a wrapper that carries this component's
@@ -130,26 +125,10 @@ import { NavItem, FIRM_NAV_ITEMS, ADMIN_NAV_ITEMS, SHARED_NAV_ITEMS, ADMIN_TAB_M
       background: var(--color-bg-secondary);
     }
 
-    /* Mobile Header */
-    .mobile-header {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 56px;
-      background: white;
-      border-bottom: 1px solid var(--color-border);
-      padding: 0 1rem;
-      align-items: center;
-      z-index: 100;
-      box-shadow: var(--shadow-nav);
-    }
-
     .menu-btn {
+      display: none;
       width: 44px;
       height: 44px;
-      display: flex;
       align-items: center;
       justify-content: center;
       background: none;
@@ -160,14 +139,6 @@ import { NavItem, FIRM_NAV_ITEMS, ADMIN_NAV_ITEMS, SHARED_NAV_ITEMS, ADMIN_TAB_M
     }
 
     .menu-btn:active { background: var(--color-bg-tertiary); }
-
-    .header-title {
-      font-weight: 600;
-      color: var(--color-text-primary);
-      font-size: var(--font-size-lg);
-      flex: 1;
-      text-align: center;
-    }
 
     .mobile-lang-toggle {
       display: flex;
@@ -295,7 +266,7 @@ import { NavItem, FIRM_NAV_ITEMS, ADMIN_NAV_ITEMS, SHARED_NAV_ITEMS, ADMIN_TAB_M
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
+      background: var(--color-overlay);
       z-index: 150;
     }
 
@@ -307,7 +278,7 @@ import { NavItem, FIRM_NAV_ITEMS, ADMIN_NAV_ITEMS, SHARED_NAV_ITEMS, ADMIN_TAB_M
       left: 0;
       right: 0;
       height: 64px;
-      background: white;
+      background: var(--color-surface);
       border-top: 1px solid var(--color-border);
       padding-bottom: env(safe-area-inset-bottom);
       z-index: 100;
@@ -342,14 +313,19 @@ import { NavItem, FIRM_NAV_ITEMS, ADMIN_NAV_ITEMS, SHARED_NAV_ITEMS, ADMIN_TAB_M
 
     /* Mobile Styles */
     @media (max-width: 768px) {
-      .mobile-header { display: flex; }
       .mobile-overlay { display: block; }
-      .top-bar { display: none; }
+      .top-bar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        gap: var(--space-2);
+        padding: 0 var(--space-2);
+      }
+      .menu-btn { display: flex; }
 
       .main-content {
         margin-left: 0;
         padding: 0;
-        padding-top: 56px;
         padding-bottom: calc(64px + env(safe-area-inset-bottom));
         height: 100svh;
         height: 100vh;
