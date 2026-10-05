@@ -14,6 +14,12 @@ const SEEDED_ROLES: Record<string, string> = {
 export async function stubAuthApi(page: Page): Promise<void> {
   let user: { id: string; email: string; role: string } | null = null;
 
+  // Block external feedback / analytics widgets so they cannot inject extra
+  // buttons into the page (which would cause strict-mode getByRole('button')
+  // violations in the journey specs).
+  await page.route('**colossus.athenconsult.com/**', (route) => route.abort());
+  await page.route('**/ingest/v1/loader.js**', (route) => route.abort());
+
   await page.route('**/api/**', async (route) => {
     const req = route.request();
     const method = req.method().toUpperCase();

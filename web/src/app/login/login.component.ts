@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { AuthService } from '../shared/auth.service';
+import { AuthService, User } from '../shared/auth.service';
 import { StickyFooterComponent } from '../shared/sticky-footer.component';
 import { AuthApi } from '../shared/api/auth-api.service';
 import {
@@ -11,6 +11,24 @@ import {
   BadRequestError,
 } from '../shared/api/api-errors';
 import { PREVIEW_MODE } from '../shared/preview/preview-mode';
+
+/**
+ * Pure function: maps a backend role string to the appropriate post-login
+ * landing route. Exported so it can be tested and reused across the app.
+ */
+export function landingRouteFor(role: string): string {
+  switch (role) {
+    case 'ADMIN':
+    case 'SUPER_ADMIN':
+      return '/admin/customers';
+    case 'VENDOR':
+      return '/vendor/profile';
+    case 'CUSTOMER':
+      return '/orders';
+    default:
+      return '/dashboard';
+  }
+}
 
 @Component({
   selector: 'app-login',
@@ -225,25 +243,23 @@ export class LoginComponent {
 
   /** Role-aware post-login landing: admin → customers, vendor → profile, else orders. */
   private landingFor(backendRole: string): string {
-    switch (backendRole) {
-      case 'ADMIN':
-      case 'SUPER_ADMIN':
-        return '/admin/customers';
-      case 'VENDOR':
-        return '/vendor/profile';
-      default:
-        return '/orders';
-    }
+    return landingRouteFor(backendRole);
   }
 
   private mapRole(
     backendRole: string,
-  ): 'USER' | 'ADMIN' | 'SUPER_ADMIN' {
+  ): User['role'] {
     switch (backendRole) {
       case 'ADMIN':
         return 'ADMIN';
       case 'SUPER_ADMIN':
         return 'SUPER_ADMIN';
+      case 'MANAGER':
+        return 'MANAGER';
+      case 'VENDOR':
+        return 'VENDOR';
+      case 'CUSTOMER':
+        return 'CUSTOMER';
       default:
         return 'USER';
     }
