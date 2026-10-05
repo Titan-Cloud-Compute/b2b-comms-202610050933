@@ -5,14 +5,15 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../shared/auth.service';
 import { AuthApi } from '../shared/api/auth-api.service';
 import { ConflictError, BadRequestError } from '../shared/api/api-errors';
+import { landingRouteFor, sessionRoleFor } from '../login/login.component';
 
-/** How long the "Account created" confirmation stays up before /orders. */
+/** How long the "Account created" confirmation stays up before role landing. */
 const SUCCESS_REDIRECT_MS = 1500;
 
 /**
- * Single-step customer signup: email + password, one submit button.
- * Calls the backend /api/auth/signup (no registration token → CUSTOMER),
- * shows "Account created", then lands on /orders.
+ * Single-step signup: email + password, one submit button.
+ * Calls the backend /api/auth/signup, stores the role the backend returned,
+ * shows "Account created", then navigates to landingRouteFor(role).
  */
 @Component({
   selector: 'app-signup',
@@ -120,15 +121,16 @@ export class SignupComponent implements OnDestroy {
     this.isLoading.set(true);
     try {
       const user = await this.authApi.signup({ email, password: this.password });
+      const role = sessionRoleFor(user.role);
       this.auth.setUser({
         id: user.id,
         email: user.email,
         name: user.email.split('@')[0],
-        role: user.role === 'ADMIN' || user.role === 'SUPER_ADMIN' ? user.role : 'USER',
+        role,
       });
       this.created.set(true);
       this.redirectTimer = setTimeout(() => {
-        void this.router.navigate(['/orders']);
+        void this.router.navigate([landingRouteFor(user.role)]);
       }, SUCCESS_REDIRECT_MS);
     } catch (err) {
       if (err instanceof ConflictError) {
@@ -136,15 +138,16 @@ export class SignupComponent implements OnDestroy {
         // and continue to the same confirmation + /orders landing.
         try {
           const existing = await this.authApi.login({ email, password: this.password });
+          const existingRole = sessionRoleFor(existing.role);
           this.auth.setUser({
             id: existing.id,
             email: existing.email,
             name: existing.email.split('@')[0],
-            role: existing.role === 'ADMIN' || existing.role === 'SUPER_ADMIN' ? existing.role : 'USER',
+            role: existingRole,
           });
           this.created.set(true);
           this.redirectTimer = setTimeout(() => {
-            void this.router.navigate(['/orders']);
+            void this.router.navigate([landingRouteFor(existing.role)]);
           }, SUCCESS_REDIRECT_MS);
         } catch {
           this.error.set('An account with this email already exists');

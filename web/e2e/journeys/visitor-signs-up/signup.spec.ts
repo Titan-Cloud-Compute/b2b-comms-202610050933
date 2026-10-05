@@ -10,5 +10,5 @@ test('visitor signs up — signup', async ({ page }) => {
   await page.getByLabel('Password').fill('Password1!');
   await page.getByRole('button').click();
   await expect(page.getByText('Account created')).toBeVisible();
-  await expect(page).toHaveURL(/#\/orders/, { timeout: 10_000 });
+  await expect(page).toHaveURL(/#\/vendor\/profile/, { timeout: 10_000 });
 });

@@ -13,6 +13,27 @@ import {
 import { PREVIEW_MODE } from '../shared/preview/preview-mode';
 
 /**
+ * Pure function: maps a backend role string to the session User role.
+ * Exported so it can be reused across the app (e.g. signup).
+ */
+export function sessionRoleFor(backendRole: string): User['role'] {
+  switch (backendRole) {
+    case 'ADMIN':
+      return 'ADMIN';
+    case 'SUPER_ADMIN':
+      return 'SUPER_ADMIN';
+    case 'MANAGER':
+      return 'MANAGER';
+    case 'VENDOR':
+      return 'VENDOR';
+    case 'CUSTOMER':
+      return 'CUSTOMER';
+    default:
+      return 'USER';
+  }
+}
+
+/**
  * Pure function: maps a backend role string to the appropriate post-login
  * landing route. Exported so it can be tested and reused across the app.
  */
@@ -249,20 +270,7 @@ export class LoginComponent {
   private mapRole(
     backendRole: string,
   ): User['role'] {
-    switch (backendRole) {
-      case 'ADMIN':
-        return 'ADMIN';
-      case 'SUPER_ADMIN':
-        return 'SUPER_ADMIN';
-      case 'MANAGER':
-        return 'MANAGER';
-      case 'VENDOR':
-        return 'VENDOR';
-      case 'CUSTOMER':
-        return 'CUSTOMER';
-      default:
-        return 'USER';
-    }
+    return sessionRoleFor(backendRole);
   }
 
 }
